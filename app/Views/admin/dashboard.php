@@ -37,42 +37,7 @@
 </div>
 
 <!-- Stat cards -->
-<?php
-$stats = [
-    [
-        'label' => 'Total Movies',
-        'value' => '128',
-        'delta' => '+12.4%',
-        'positive' => true,
-        'icon'  => 'film',
-        'note'  => 'vs last month',
-    ],
-    [
-        'label' => 'Total Views',
-        'value' => '2.4M',
-        'delta' => '+8.1%',
-        'positive' => true,
-        'icon'  => 'eye',
-        'note'  => 'vs last month',
-    ],
-    [
-        'label' => 'Active Users',
-        'value' => '14,328',
-        'delta' => '+3.2%',
-        'positive' => true,
-        'icon'  => 'users',
-        'note'  => 'vs last month',
-    ],
-    [
-        'label' => 'Avg. Rating',
-        'value' => '8.4',
-        'delta' => '-0.2',
-        'positive' => false,
-        'icon'  => 'star',
-        'note'  => 'vs last month',
-    ],
-];
-?>
+<?php $stats = $stats ?? []; ?>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     <?php foreach ($stats as $stat): ?>
         <div class="rounded-2xl bg-zinc-900/60 border border-zinc-800 p-5 shadow-soft hover:border-zinc-700 transition-colors">
@@ -92,6 +57,18 @@ $stats = [
         </div>
     <?php endforeach; ?>
 </div>
+
+<?php if (session('success')): ?>
+    <div class="mb-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+        <?= esc(session('success')) ?>
+    </div>
+<?php endif; ?>
+
+<?php if (session('error')): ?>
+    <div class="mb-5 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+        <?= esc(session('error')) ?>
+    </div>
+<?php endif; ?>
 
 <!-- Movies CRUD section (table + modals share one Alpine scope) -->
 <?= $this->include('admin/movies/movie-table') ?>

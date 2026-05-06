@@ -6,6 +6,7 @@
  * Expects (optional): $active = 'dashboard' | 'movies' | 'genres' | ...
  */
 $active = $active ?? 'dashboard';
+$movieCount = $movieCount ?? 0;
 
 $navItems = [
     ['key' => 'dashboard',  'label' => 'Dashboard',   'icon' => 'layout-dashboard', 'href' => '/admin'],
@@ -52,7 +53,7 @@ $settingsItems = [
                         <span><?= esc($item['label']) ?></span>
                         <?php if ($item['key'] === 'movies'): ?>
                             <span class="ml-auto inline-flex items-center justify-center text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-brand-600/15 text-brand-500 border border-brand-600/20">
-                                128
+                                <?= esc((string) $movieCount) ?>
                             </span>
                         <?php endif; ?>
                     </a>
