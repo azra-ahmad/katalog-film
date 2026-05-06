@@ -1,4 +1,8 @@
-<?php $trendingMovies = $trendingMovies ?? []; ?>
+<?php
+$trendingMovies = $trendingMovies ?? [];
+$trendingTitle = $trendingTitle ?? 'Trending Today';
+$filters = $filters ?? ['q' => '', 'genre_id' => ''];
+?>
 
 <!-- Trending Today Section -->
 <section id="trending" class="py-16 border-t border-white/10">
@@ -7,8 +11,13 @@
             <div>
                 <h2 class="text-3xl font-black flex items-center gap-3">
                     <span class="w-1 h-8 bg-red-600 rounded-full"></span>
-                    Trending Today
+                    <?= esc($trendingTitle) ?>
                 </h2>
+                <?php if (! empty($filters['q']) || ! empty($filters['genre_id'])): ?>
+                    <a href="<?= site_url('/') ?>#trending" class="inline-flex mt-3 text-sm text-white/50 hover:text-white transition">
+                        Clear filters
+                    </a>
+                <?php endif; ?>
             </div>
 
             <div
@@ -38,7 +47,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <?php foreach ($trendingMovies as $movie): ?>
                     <div>
-                        <?= view('partials/movie-card', $movie) ?>
+                        <?= view('partials/movie-card', $movie, ['saveData' => false]) ?>
                     </div>
                 <?php endforeach; ?>
             </div>

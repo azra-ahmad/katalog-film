@@ -1,6 +1,7 @@
 <?php
 $movies = $movies ?? [];
 $genres = $genres ?? [];
+$filters = $filters ?? ['q' => '', 'genre_id' => ''];
 $errors = session('errors') ?? [];
 $initialModal = session('modal') ?? null;
 $editMovieId = session('editMovieId') ?? null;
@@ -30,16 +31,45 @@ $crudConfig = [
             <h2 class="text-lg font-semibold text-white tracking-tight">Movies</h2>
             <p class="text-xs text-zinc-500 mt-0.5">Manage your film catalog - <?= count($movies) ?> entries</p>
         </div>
-        <div class="flex items-center gap-2">
-            <div class="relative">
-                <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <input
-                    type="text"
-                    placeholder="Filter movies..."
-                    class="w-full sm:w-56 pl-9 pr-3 py-2 text-sm bg-zinc-950 border border-zinc-800 rounded-lg
-                           text-zinc-100 placeholder-zinc-500
-                           focus:outline-none focus:ring-2 focus:ring-brand-600/40 focus:border-brand-600 transition" />
-            </div>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+            <form action="<?= site_url('admin/movies') ?>" method="get" class="flex flex-col sm:flex-row sm:items-center gap-2">
+                <div class="relative">
+                    <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input
+                        type="text"
+                        name="q"
+                        value="<?= esc($filters['q'] ?? '') ?>"
+                        placeholder="Filter movies..."
+                        class="w-full sm:w-56 pl-9 pr-3 py-2 text-sm bg-zinc-950 border border-zinc-800 rounded-lg
+                               text-zinc-100 placeholder-zinc-500
+                               focus:outline-none focus:ring-2 focus:ring-brand-600/40 focus:border-brand-600 transition" />
+                </div>
+                <select
+                    name="genre_id"
+                    class="w-full sm:w-40 px-3 py-2 text-sm bg-zinc-950 border border-zinc-800 rounded-lg
+                           text-zinc-100 focus:outline-none focus:ring-2 focus:ring-brand-600/40 focus:border-brand-600 transition">
+                    <option value="">All genres</option>
+                    <?php foreach ($genres as $genre): ?>
+                        <option value="<?= esc($genre['id']) ?>" <?= (string) ($filters['genre_id'] ?? '') === (string) $genre['id'] ? 'selected' : '' ?>>
+                            <?= esc($genre['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg
+                           bg-zinc-800 hover:bg-zinc-700 text-white transition-colors">
+                    <i data-lucide="filter" class="w-4 h-4"></i>
+                    Filter
+                </button>
+                <?php if (! empty($filters['q']) || ! empty($filters['genre_id'])): ?>
+                    <a href="<?= site_url('admin/movies') ?>"
+                       class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg
+                              text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors">
+                        Reset
+                    </a>
+                <?php endif; ?>
+            </form>
             <button
                 type="button"
                 @click="openAdd()"

@@ -11,15 +11,47 @@ class Home extends BaseController
     {
         $filmModel = new FilmModel();
         $genreModel = new GenreModel();
+        $filters = [
+            'q'        => trim((string) $this->request->getGet('q')),
+            'genre_id' => trim((string) $this->request->getGet('genre_id')),
+        ];
 
-        $films = $filmModel
+        $query = $filmModel
             ->select('films.*, genres.name AS genre_name')
-            ->join('genres', 'genres.id = films.genre_id', 'left')
+            ->join('genres', 'genres.id = films.genre_id', 'left');
+
+        if (! empty($filters['q'])) {
+            $search = $filters['q'];
+            $query->groupStart()
+                ->like('films.title', $search)
+                ->orLike('films.director', $search)
+                ->orLike('films.actors', $search)
+                ->orLike('films.synopsis', $search)
+                ->orLike('genres.name', $search)
+                ->groupEnd();
+        }
+
+        if (! empty($filters['genre_id'])) {
+            $query->where('films.genre_id', (int) $filters['genre_id']);
+        }
+
+        $films = $query
             ->orderBy('films.id', 'DESC')
             ->findAll();
 
         $movies = array_map([$this, 'formatMovie'], $films);
         $topMovies = $movies;
+        $genres = $genreModel->orderBy('name', 'ASC')->findAll();
+        $activeGenre = null;
+
+        if (! empty($filters['genre_id'])) {
+            foreach ($genres as $genre) {
+                if ((string) $genre['id'] === (string) $filters['genre_id']) {
+                    $activeGenre = $genre['name'];
+                    break;
+                }
+            }
+        }
 
         usort($topMovies, static function (array $a, array $b): int {
             return ((float) $b['rating']) <=> ((float) $a['rating']);
@@ -36,8 +68,30 @@ class Home extends BaseController
             'featuredMovie'  => $topMovies[0] ?? null,
             'trendingMovies' => array_slice($movies, 0, 8),
             'topMovies'      => $topMovies,
-            'genres'         => $genreModel->orderBy('name', 'ASC')->findAll(),
+            'genres'         => $genres,
+            'filters'        => $filters,
+            'currentSearch'  => $filters['q'],
+            'currentGenreId' => $filters['genre_id'],
+            'activeGenre'    => $activeGenre,
+            'trendingTitle'  => $this->sectionTitle($filters, $activeGenre),
         ]);
+    }
+
+    private function sectionTitle(array $filters, ?string $activeGenre): string
+    {
+        if (! empty($filters['q']) && $activeGenre) {
+            return 'Results for "' . $filters['q'] . '" in ' . $activeGenre;
+        }
+
+        if (! empty($filters['q'])) {
+            return 'Results for "' . $filters['q'] . '"';
+        }
+
+        if ($activeGenre) {
+            return $activeGenre . ' Movies';
+        }
+
+        return 'Trending Today';
     }
 
     private function formatMovie(array $movie): array

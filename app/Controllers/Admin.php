@@ -86,7 +86,11 @@ class Admin extends BaseController
 
     private function renderDashboard(string $active, string $pageTitle, string $title): string
     {
-        $movies = $this->getMovies();
+        $filters = [
+            'q'        => trim((string) $this->request->getGet('q')),
+            'genre_id' => trim((string) $this->request->getGet('genre_id')),
+        ];
+        $movies = $this->getMovies($filters);
         $movieCount = count($movies);
 
         return view('admin/dashboard', [
@@ -95,16 +99,34 @@ class Admin extends BaseController
             'active'     => $active,
             'movies'     => $movies,
             'genres'     => $this->genreModel->orderBy('name', 'ASC')->findAll(),
+            'filters'    => $filters,
             'stats'      => $this->getStats(),
             'movieCount' => $movieCount,
         ]);
     }
 
-    private function getMovies(): array
+    private function getMovies(array $filters = []): array
     {
-        $movies = $this->filmModel
+        $query = $this->filmModel
             ->select('films.*, genres.name AS genre_name')
-            ->join('genres', 'genres.id = films.genre_id', 'left')
+            ->join('genres', 'genres.id = films.genre_id', 'left');
+
+        if (! empty($filters['q'])) {
+            $search = $filters['q'];
+            $query->groupStart()
+                ->like('films.title', $search)
+                ->orLike('films.director', $search)
+                ->orLike('films.actors', $search)
+                ->orLike('films.synopsis', $search)
+                ->orLike('genres.name', $search)
+                ->groupEnd();
+        }
+
+        if (! empty($filters['genre_id'])) {
+            $query->where('films.genre_id', (int) $filters['genre_id']);
+        }
+
+        $movies = $query
             ->orderBy('films.created_at', 'DESC')
             ->orderBy('films.id', 'DESC')
             ->findAll();

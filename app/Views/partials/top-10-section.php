@@ -29,7 +29,7 @@ $topMovies = $sectionMovies ?? $topMovies ?? [];
                 <div class="flex gap-6 pb-4">
                     <?php foreach ($topMovies as $movie): ?>
                         <div class="flex-shrink-0 w-40">
-                            <?= view('partials/movie-card', $movie) ?>
+                            <?= view('partials/movie-card', $movie, ['saveData' => false]) ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
