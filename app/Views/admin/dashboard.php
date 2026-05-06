@@ -21,19 +21,6 @@
         <h1 class="text-2xl font-semibold text-white tracking-tight">Welcome back, Azra</h1>
         <p class="text-sm text-zinc-400 mt-1">Here's what's happening with your film catalog today.</p>
     </div>
-    <div class="flex items-center gap-2">
-        <button class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg
-                       bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            Export
-        </button>
-        <a href="/admin/movies"
-           class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg
-                  bg-brand-600 hover:bg-brand-700 text-white shadow-soft transition-colors">
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            Add Movie
-        </a>
-    </div>
 </div>
 
 <!-- Stat cards -->

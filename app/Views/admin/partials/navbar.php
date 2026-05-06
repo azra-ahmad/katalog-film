@@ -33,28 +33,6 @@ $breadcrumb = $breadcrumb ?? ['Admin', $pageTitle];
 
         <!-- Search -->
         <div class="ml-auto flex items-center gap-3">
-            <div class="hidden md:block relative">
-                <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <input
-                    type="text"
-                    placeholder="Search movies, users..."
-                    class="w-64 pl-9 pr-3 py-2 text-sm bg-zinc-900 border border-zinc-800 rounded-lg
-                           text-zinc-100 placeholder-zinc-500
-                           focus:outline-none focus:ring-2 focus:ring-brand-600/40 focus:border-brand-600 transition" />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-zinc-500 border border-zinc-800 rounded px-1.5 py-0.5">
-                    ⌘K
-                </span>
-            </div>
-
-            <!-- Notifications -->
-            <button class="relative p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
-                    aria-label="Notifications">
-                <i data-lucide="bell" class="w-5 h-5"></i>
-                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-500 rounded-full ring-2 ring-zinc-950"></span>
-            </button>
-
-            <!-- Divider -->
-            <div class="hidden sm:block w-px h-6 bg-zinc-800"></div>
 
             <!-- Profile dropdown -->
             <div x-data="{ open: false }" class="relative">
