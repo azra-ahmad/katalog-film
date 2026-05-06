@@ -1,3 +1,5 @@
+<?php $genres = $genres ?? []; ?>
+
 <nav class="bg-black/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <!-- Logo -->
@@ -40,10 +42,15 @@
                     x-transition
                     class="absolute top-full mt-2 w-48 bg-neutral-900 border border-white/10 rounded-lg overflow-hidden shadow-lg"
                 >
-                    <a href="#" class="block px-4 py-3 hover:bg-white/5 transition text-sm">Movies</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-white/5 transition text-sm">TV Shows</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-white/5 transition text-sm">Trending</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-white/5 transition text-sm">New Releases</a>
+                    <?php if (! empty($genres)): ?>
+                        <?php foreach ($genres as $genre): ?>
+                            <a href="#trending" class="block px-4 py-3 hover:bg-white/5 transition text-sm">
+                                <?= esc($genre['name']) ?>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <a href="#trending" class="block px-4 py-3 hover:bg-white/5 transition text-sm">Movies</a>
+                    <?php endif; ?>
                 </div>
             </div>
 

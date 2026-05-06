@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // Halaman user (sudah ada)
 $routes->get('/', 'Home::index');
+$routes->get('movies/(:num)', 'Movies::show/$1');
 
 $routes->group('admin', static function ($routes) {
     $routes->get('/', 'Admin::index');

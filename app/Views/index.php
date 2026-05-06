@@ -5,9 +5,6 @@
 <!-- Hero Section -->
 <?= $this->include('partials/hero') ?>
 
-<!-- Top 10 Section -->
-<?= $this->include('partials/top-10-section') ?>
-
 <!-- Trending Section -->
 <?= $this->include('partials/trending-section') ?>
 

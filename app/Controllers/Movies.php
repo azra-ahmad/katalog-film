@@ -4,39 +4,40 @@ namespace App\Controllers;
 
 use App\Models\FilmModel;
 use App\Models\GenreModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
-class Home extends BaseController
+class Movies extends BaseController
 {
-    public function index(): string
+    public function show(int $id): string
     {
         $filmModel = new FilmModel();
         $genreModel = new GenreModel();
-
-        $films = $filmModel
+        $movie = $filmModel
             ->select('films.*, genres.name AS genre_name')
             ->join('genres', 'genres.id = films.genre_id', 'left')
+            ->where('films.id', $id)
+            ->first();
+
+        if (! $movie) {
+            throw PageNotFoundException::forPageNotFound('Movie not found.');
+        }
+
+        $relatedMovies = $filmModel
+            ->select('films.*, genres.name AS genre_name')
+            ->join('genres', 'genres.id = films.genre_id', 'left')
+            ->where('films.id !=', $id)
+            ->orderBy('films.rating', 'DESC')
             ->orderBy('films.id', 'DESC')
-            ->findAll();
+            ->findAll(10);
 
-        $movies = array_map([$this, 'formatMovie'], $films);
-        $topMovies = $movies;
+        $youMayLike = array_map([$this, 'formatMovie'], $relatedMovies);
 
-        usort($topMovies, static function (array $a, array $b): int {
-            return ((float) $b['rating']) <=> ((float) $a['rating']);
-        });
-
-        $topMovies = array_slice(array_map(static function (array $movie, int $index): array {
-            $movie['rank'] = $index + 1;
-
-            return $movie;
-        }, $topMovies, array_keys($topMovies)), 0, 10);
-
-        return view('index', [
-            'title'          => 'Catafilm - Modern Film Catalog',
-            'featuredMovie'  => $topMovies[0] ?? null,
-            'trendingMovies' => array_slice($movies, 0, 8),
-            'topMovies'      => $topMovies,
-            'genres'         => $genreModel->orderBy('name', 'ASC')->findAll(),
+        return view('movies/show', [
+            'title'         => $movie['title'] . ' | Catafilm',
+            'movie'         => $this->formatMovie($movie),
+            'sectionTitle'  => 'You May Like',
+            'sectionMovies' => $youMayLike,
+            'genres'        => $genreModel->orderBy('name', 'ASC')->findAll(),
         ]);
     }
 
@@ -60,7 +61,7 @@ class Home extends BaseController
     private function posterUrl(?string $poster): string
     {
         if (! $poster) {
-            return 'https://placehold.co/600x900/171717/ef4444?text=Catafilm';
+            return 'https://placehold.co/900x1350/171717/ef4444?text=Catafilm';
         }
 
         if (str_starts_with($poster, 'http://') || str_starts_with($poster, 'https://')) {
