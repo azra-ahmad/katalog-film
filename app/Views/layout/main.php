@@ -35,6 +35,24 @@
         .scroll-smooth {
             scroll-behavior: smooth;
         }
+        
+        /* Ensure smooth scrolling and proper layering */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Performance optimization for parallax */
+        .parallax-bg-1,
+        .parallax-bg-2,
+        .parallax-bg-3 {
+            will-change: transform;
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
     </style>
 </head>
 <body class="bg-black text-white">

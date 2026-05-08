@@ -2,6 +2,9 @@
 
 <?= $this->section('content') ?>
 
+<!-- Group Introduction Section -->
+<?= $this->include('partials/group-intro') ?>
+
 <!-- Hero Section -->
 <?= $this->include('partials/hero') ?>
 

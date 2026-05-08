@@ -4,7 +4,7 @@ $fallbackImage = 'https://placehold.co/1920x1080/171717/ef4444?text=Catafilm';
 ?>
 
 <!-- Hero Section -->
-<section class="relative w-full h-screen overflow-hidden">
+<section id="hero-section" class="relative w-full h-screen overflow-hidden scroll-mt-16">
     <div class="absolute inset-0">
         <img
             src="<?= esc($featuredMovie['image'] ?? $fallbackImage) ?>"
