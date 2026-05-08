@@ -74,17 +74,19 @@ class Home extends BaseController
             'currentGenreId' => $filters['genre_id'],
             'activeGenre'    => $activeGenre,
             'trendingTitle'  => $this->sectionTitle($filters, $activeGenre),
-            // Group data for intro section
-            'groupName'      => 'KELOMPOK UJIAN PRAKTIKUM SISTEM MULTIMEDIA',
-            'members'        => [
-                'Azra Ahmad Algifari (50422311)',
-                'Muhammad Raihan Aditya Hidayat (51422123)', 
-                'Muhammad Rafi Aditya (51422107)',
-                'Zidan Fadla Ahfandani (51422685)'
-            ],
-            'projectTitle'   => 'CATAFILM',
-            'subtitle'       => 'Film Catalog Management System'
         ]);
+    }
+
+    public function about(): string
+    {
+        $genreModel = new GenreModel();
+
+        return view('about-us', array_merge([
+            'title'          => 'About Us | Catafilm',
+            'genres'         => $genreModel->orderBy('name', 'ASC')->findAll(),
+            'currentSearch'  => '',
+            'currentGenreId' => '',
+        ], $this->groupIntroData()));
     }
 
     private function sectionTitle(array $filters, ?string $activeGenre): string
@@ -132,5 +134,20 @@ class Home extends BaseController
         }
 
         return base_url($poster);
+    }
+
+    private function groupIntroData(): array
+    {
+        return [
+            'groupName'    => 'KELOMPOK UJIAN PRAKTIKUM SISTEM MULTIMEDIA',
+            'members'      => [
+                'Azra Ahmad Algifari (50422311)',
+                'Muhammad Raihan Aditya Hidayat (51422123)',
+                'Muhammad Rafi Aditya (51422107)',
+                'Zidan Fadla Ahfandani (51422685)',
+            ],
+            'projectTitle' => 'CATAFILM',
+            'subtitle'     => 'Film Catalog Management System',
+        ];
     }
 }

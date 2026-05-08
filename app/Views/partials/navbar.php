@@ -35,6 +35,7 @@ $currentGenreId = $currentGenreId ?? '';
                     class="bg-transparent ml-3 outline-none text-sm w-32 placeholder-white/40"
                 >
             </form>
+            
             <div class="relative" x-data="{ open: false }">
                 <button 
                     @click="open = !open"
@@ -74,7 +75,10 @@ $currentGenreId = $currentGenreId ?? '';
                     <?php endif; ?>
                 </div>
             </div>
-
+            <a href="<?= site_url('about-us') ?>"
+               class="hidden md:inline-flex items-center text-white/80 hover:text-white transition text-sm font-500">
+                About Us
+            </a>
             <!-- Search Icon (Mobile) -->
             <form action="<?= site_url('/') ?>" method="get" class="sm:hidden flex items-center bg-white/10 border border-white/20 rounded-lg px-3 py-2">
                 <?php if ($currentGenreId !== ''): ?>
